@@ -11,5 +11,5 @@ echo"Connection Successful";
 else {
 echo"Connection failed";
 }
-mysqli_close(conn);
+mysqli_close($conn);
 ?>

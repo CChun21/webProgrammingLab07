@@ -17,5 +17,5 @@ die('Connection failed: ' . $conn->error);
 if ($conn) {
 echo"Connection Successful";
 }
-mysqli_close(conn);
+mysqli_close($conn);
 ?>
