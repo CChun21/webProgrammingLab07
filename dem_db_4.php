@@ -20,7 +20,7 @@
 
 <?php
 //attach the secure data file
-include('dbh.inc');
+include('/home/cc1814/P/dbh.inc');
 $conn = mysqli_connect($db_server,$user,$password,$db_names);//Method -1
 //Get the Data
 $username=trim(addslashes($_POST["uname"]));
