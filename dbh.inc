@@ -1,6 +1,6 @@
 <?php
 $db_server='localhost';
-$user='root'; //Use your mariaDB logIn name
-$password=''; //Use your mariaDB password
+$user='cc1814'; //Use your mariaDB logIn name
+$password='mumscuit'; //Use your mariaDB password
 $db_names='demo';
 ?>
