@@ -2,8 +2,6 @@
 <html>
 <body>
 
-<h1> Example for inserting data to DB</h1>
-<br>
 <h2>Registration Page</h2>
 <form action="dem_db_4.php" method="post">
 <label for="uname">User Name:</label>
