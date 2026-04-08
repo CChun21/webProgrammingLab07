@@ -1,49 +1,38 @@
 <?php
-session_start();
-//attach the secure data file
-include('/home/cc1814/P/dbh.inc');
-$conn = mysqli_connect($db_server,$user,$password,$db_names);//Method -1
+    // Start session
+    session_start();
 
-/*
-// Check connection
-if ($conn) {
-echo"Connection Successfull"."<br>";
-}
-*/
+    // If the user is already logged in, redirect to home page
+    if (isset($_SESSION["username"])) {
+        header("Location: home.php");
+        exit();
+    }
+
+    // Check if the error parameter is set in the URL
+    if (isset($_GET['error']) && $_GET['error'] == 1) {
+        echo '<p style="color: red;">Incorrect username or password. Please try again.</p>';
+    }
 ?>
 
 <!DOCTYPE html>
 <html>
-<body>
+    <head>
+        <title>Login</title>
+    </head>
 
-<h2>Login Page</h2>
-<form action="dem_db_4.php" method="post">
-<label for="uname">User Name:</label>
-<input type="text" id="fname" name="uname" value=""><br>
-<label for="psw">Password:</label>
-<input type="password" id="pass" name="psw" value=""><br>
-<br>
-<input type="submit" name="login" value="Submit">
-</form>
-</body>
-</html>
+    <body>
+        <h2>Login Page</h2>
 
-<?php
-echo "<br>PHP script to retrivew data from DB<br>";
+        <form action="authentication.php" method="post">
+            <label for="uname">User Name:</label>
+            <input type="text" id="uname" name="uname" value=""><br>
 
-//check LoginSystem user/pass in accordance to the given username and password
+            <label for="psw">Password:</label>
+            <input type="password" id="psw" name="psw" value=""><br>
 
-/*
-$username=trim(addslashes($_POST["uname"]));
-$passcode=trim(addslashes($_POST["psw"]));
-$sql="SELECT (username, password) from LoginSystem WHERE Username=$username AND Password=$passcode";
-*/
+            <input type="submit" name="login" value="Submit">
+        </form>
 
-//$res=mysqli_query($conn,$sql);
-
-mysqli_close($conn);
-
-?>
-
-</body>
+        <p>Don't have an account? <a href="registration.php">Register here!</a></p>
+    </body>
 </html>
