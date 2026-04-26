@@ -3,7 +3,7 @@
     session_start();
 
     // If the user is already logged in, redirect to home page.
-    if (isset($_SESSION["username"])) {
+    if (isset($_SESSION["email"])) {
         header("Location: home.php");
         exit();
     }
@@ -19,20 +19,20 @@
     if (isset($_POST["login"])) {
 
         // Pull the data from the form and sanitize it.
-        $username = trim(addslashes($_POST["uname"]));
+        $email = trim(addslashes($_POST["email"]));
         $passcode = trim(addslashes($_POST["psw"]));
         $passcode2 = trim(addslashes($_POST["psw2"]));
-        $email = trim(addslashes($_POST["email"]));
+        
 
         // Checks whether required fields are empty.
-        if (!empty($username) && !empty($passcode) && !empty($passcode2)) {
+        if (!empty($email) && !empty($passcode) && !empty($passcode2)) {
 
             // Checks that both password fields match.
             if ($passcode == $passcode2) {
                 // Prepare the INSERT statement.
-                $sql_string = "INSERT INTO accounts (username, password, email) VALUES (?, ?, ?)";
+                $sql_string = "INSERT INTO users (email, pwd) VALUES (?, ?)";
                 $stmt = mysqli_prepare($conn, $sql_string);
-                mysqli_stmt_bind_param($stmt, "sss", $username, $passcode, $email);
+                mysqli_stmt_bind_param($stmt, "ss", $email, $passcode);
                 mysqli_stmt_execute($stmt);
                 mysqli_stmt_close($stmt);
                 $success = true;
@@ -102,12 +102,7 @@
 
             <form action="registration.php" method="post">
                 <div class="mb-3">
-                    <label for="uname" class="form-label">Username <span class="text-warning">*</span></label>
-                    <input type="text" id="uname" name="uname" class="form-control" placeholder="Choose a username" required>
-                </div>
-
-                <div class="mb-3">
-                    <label for="email" class="form-label">Email</label>
+                    <label for="email" class="form-label">Email<span class="text-warning">*</span></label>
                     <input type="email" id="email" name="email" class="form-control" placeholder="Enter your email">
                 </div>
 

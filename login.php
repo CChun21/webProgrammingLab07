@@ -3,7 +3,7 @@
     session_start();
 
     // If the user is already logged in, redirect to home page.
-    if (isset($_SESSION["username"])) {
+    if (isset($_SESSION["email"])) {
         header("Location: home.php");
         exit();
     }
@@ -65,8 +65,8 @@
 
             <form action="authentication.php" method="post">
                 <div class="mb-3">
-                    <label for="uname" class="form-label">Username</label>
-                    <input type="text" id="uname" name="uname" class="form-control" placeholder="Enter your username" required>
+                    <label for="email" class="form-label">Email</label>
+                    <input type="text" id="email" name="email" class="form-control" placeholder="Enter your username" required>
                 </div>
                 <div class="mb-3">
                     <label for="psw" class="form-label">Password</label>

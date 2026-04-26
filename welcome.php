@@ -3,7 +3,7 @@
     session_start();
 
     // If the user is not logged in, redirect to login page.
-    if (!isset($_SESSION["username"])) {
+    if (!isset($_SESSION["email"])) {
         header("Location: login.php");
         exit();
     }
@@ -19,7 +19,7 @@
     </head>
 
     <body>
-        <h2>Welcome, <?php echo $_SESSION["username"]; ?>!</h2>
+        <h2>Welcome!</h2>
 
         <p>You have successfully logged in.</p>
         <p>Redirecting to home page...</p>
