@@ -1,28 +1,37 @@
 body {
     font-family: Arial, sans-serif;
     color: white;
+    /* Push content down so it never hides behind the fixed navbar (~56px tall) */
+    padding-top: 56px;
 }
 
-/* ── Hero (index.php) ── */
-/* Base style: inline style on the <section> tag sets the actual image URL.
-   This class handles sizing, layout, and the dark-background fallback. */
+/* ── Hero (index.php / home.php) ── */
 .hero {
     background-color: #1a1a1a; /* fallback if image fails to load */
     background-size: cover;
     background-position: center center;
     background-repeat: no-repeat;
-    height: 90vh;
+
+    /* Margins so the image doesn't touch the edges or the navbar */
+    margin: 20px 20px 20px 20px;
+    border-radius: 12px;
+
+    /* Height accounts for navbar (56px) + top margin (20px) */
+    height: calc(100vh - 56px - 40px);
+
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
+
+    /* Clip the image inside the rounded corners */
+    overflow: hidden;
 }
 
-/* ── Inner-page background (menu, about, contact, login, register) ── */
+/* ── Inner-page background (menu, about, contact, login, register, specials) ── */
 .page-bg {
     background: url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=1600&q=80') no-repeat center center / cover fixed;
     min-height: 100vh;
-    padding-top: 80px;
 }
 
 /* ── Dark overlay card used on all pages ── */
@@ -30,4 +39,44 @@ body {
     background: rgba(0, 0, 0, 0.75);
     padding: 30px;
     border-radius: 10px;
+}
+
+/* ── Transactions page ── */
+.menu-item-card {
+    background: rgba(0, 0, 0, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.order-summary {
+    background: rgba(0, 0, 0, 0.8);
+    border: 1px solid rgba(255, 193, 7, 0.4);
+    border-radius: 10px;
+    padding: 20px;
+    position: sticky;
+    top: 76px; /* navbar height + a little gap */
+}
+
+.order-item-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 4px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    font-size: 0.95rem;
+}
+
+.total-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #ffc107;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 2px solid #ffc107;
 }
