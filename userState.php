@@ -1,7 +1,7 @@
 <?php
     function isAdmin() {
         // Check if they are logged in AND if their role is 1
-        return (isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === "admin");
+        return (isset($_SESSION['role']) && $_SESSION['role'] === "admin");
     }
 
     function isLoggedIn() {
