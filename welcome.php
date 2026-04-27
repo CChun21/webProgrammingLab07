@@ -9,7 +9,7 @@
     }
 
     // Redirect to home page after 5 seconds.
-    header("refresh: 3; url = home.php");
+    header("refresh: 3; url = index.php");
 ?>
 
 <!DOCTYPE html>

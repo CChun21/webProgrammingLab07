@@ -12,8 +12,8 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        <title>John's Restaurant - Home</title>
-        
+        <title>John's Restaurant - About Us</title>
+
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
         <link rel="stylesheet" href="style.css">
     </head>
@@ -30,9 +30,9 @@
 
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ms-auto">
-                        <li class="nav-item"><a class="nav-link active" href="index.php">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" href="index.php">Home</a></li>
                         <li class="nav-item"><a class="nav-link" href="menu.php">Menu</a></li>
-                        <li class="nav-item"><a class="nav-link" href="about.php">About Us</a></li>
+                        <li class="nav-item"><a class="nav-link active" href="about.php">About Us</a></li>
                         <li class="nav-item"><a class="nav-link" href="contact.php">Contact</a></li>
                         
                         <?php if(!isLoggedIn()): ?>
@@ -45,18 +45,19 @@
             </div>
         </nav>
 
-        <!-- Hero Section with background image -->
         <section class="hero" style="background-image: url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=1600&q=80');">
-            <div class="overlay">
-                <h1 class="display-4">Welcome to John's Restaurant</h1>
+            <div class="container overlay">
+                <h1 class="text-center">About John's Restaurant</h1>
 
-                <h3>Your Destination for Flavor &amp; Comfort</h3>
+                <p>
+                Founded in 2025, John's Restaurant brings comfort food with a modern twist.
+                Our mission is to create memorable dining experiences through quality ingredients and exceptional service.
+                </p>
 
-                <a href="menu.php" class="btn btn-warning mt-3">View Our Menu</a>
+                <p>We believe food brings people together.</p>
+
+                <a href="contact.php" class="btn btn-warning mt-3">Contact Us</a>
             </div>
         </section>
-
-        <!-- Bootstrap JS -->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     </body>
 </html>
