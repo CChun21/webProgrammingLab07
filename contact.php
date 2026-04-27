@@ -11,9 +11,9 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-        <title>John's Restaurant - Home</title>
         
+        <title>John's Restaurant - Contact</title>
+
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
         <link rel="stylesheet" href="style.css">
     </head>
@@ -30,10 +30,10 @@
 
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ms-auto">
-                        <li class="nav-item"><a class="nav-link active" href="index.php">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" href="index.php">Home</a></li>
                         <li class="nav-item"><a class="nav-link" href="menu.php">Menu</a></li>
                         <li class="nav-item"><a class="nav-link" href="about.php">About Us</a></li>
-                        <li class="nav-item"><a class="nav-link" href="contact.php">Contact</a></li>
+                        <li class="nav-item"><a class="nav-link active" href="contact.php">Contact</a></li>
                         
                         <?php if(!isLoggedIn()): ?>
                             <li class="nav-item"><a class="nav-link" href="login.php">Login</a></li>
@@ -45,18 +45,35 @@
             </div>
         </nav>
 
-        <!-- Hero Section with background image -->
+        <!-- Hero Section -->
         <section class="hero" style="background-image: url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=1600&q=80');">
-            <div class="overlay">
-                <h1 class="display-4">Welcome to John's Restaurant</h1>
+            <div class="container overlay">
+                <h1 class="text-center">Contact Us</h1>
 
-                <h3>Your Destination for Flavor &amp; Comfort</h3>
+                <h3 class="text-center mb-4">We’d Love to Hear From You</h3>
 
-                <a href="menu.php" class="btn btn-warning mt-3">View Our Menu</a>
+                <p>Email us at:
+                <a href="mailto:info@johnrestaurant.com" class="text-warning">info@johnrestaurant.com</a>
+                </p>
+
+                <p>Phone: (555) 123-4567</p>
+
+                <form>
+                    <div class="mb-3">
+                        <label class="form-label">Name</label>
+                        <input type="text" class="form-control">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Message</label>
+                        <textarea class="form-control"></textarea>
+                    </div>
+
+                    <button class="btn btn-warning">Submit</button>
+                </form>
+
+                <a href="index.php" class="btn btn-light mt-3">Return Home</a>
             </div>
         </section>
-
-        <!-- Bootstrap JS -->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     </body>
 </html>
