@@ -146,6 +146,11 @@
                                                         <small><?php echo is_array($item['allergens']) ? implode(', ', $item['allergens']) : $item['allergens']; ?></small>
                                                     </div>
                                                 <?php endif; ?>
+
+                                                <?php if ($_SESSION['role'] === "customer"): ?>
+                                                    <button type="button" class="btn btn-success">Add+</button>
+                                                    <button type="button" class="btn btn-danger">Remove-</button>
+                                                <?php endif; ?>
                                             </div>
                                         </div>
                                     </div>
