@@ -93,6 +93,7 @@
                     <ul class="navbar-nav ms-auto">
                         <li class="nav-item"><a class="nav-link" href="index.php">Home</a></li>
                         <li class="nav-item"><a class="nav-link active" href="menu.php">Menu</a></li>
+                        <li class="nav-item"><a class="nav-link" href="transaction.php">Transaction</a></li>
                         <li class="nav-item"><a class="nav-link" href="about.php">About Us</a></li>
                         <li class="nav-item"><a class="nav-link" href="contact.php">Contact</a></li>
                         
@@ -147,9 +148,20 @@
                                                     </div>
                                                 <?php endif; ?>
 
-                                                <?php if ($_SESSION['role'] === "customer"): ?>
-                                                    <button type="button" class="btn btn-success">Add+</button>
-                                                    <button type="button" class="btn btn-danger">Remove-</button>
+                                                <?php if (isset($_SESSION['role']) && $_SESSION['role'] === "customer"): ?>
+                                                    <!-- Add one to cart -->
+                                                    <form method="POST" action="transaction.php" class="d-inline mt-2">
+                                                        <input type="hidden" name="item_id"    value="<?php echo $item['id']; ?>">
+                                                        <input type="hidden" name="item_name"  value="<?php echo htmlspecialchars($item['name']); ?>">
+                                                        <input type="hidden" name="item_price" value="<?php echo $item['price']; ?>">
+                                                        <button type="submit" name="add_to_cart" class="btn btn-success btn-sm">Add+</button>
+                                                    </form>
+
+                                                    <!-- Remove one from cart -->
+                                                    <form method="POST" action="transaction.php" class="d-inline mt-2">
+                                                        <input type="hidden" name="item_id" value="<?php echo $item['id']; ?>">
+                                                        <button type="submit" name="remove_one" class="btn btn-danger btn-sm">Remove−</button>
+                                                    </form>
                                                 <?php endif; ?>
                                             </div>
                                         </div>

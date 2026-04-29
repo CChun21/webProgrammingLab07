@@ -32,6 +32,7 @@
                     <ul class="navbar-nav ms-auto">
                         <li class="nav-item"><a class="nav-link active" href="index.php">Home</a></li>
                         <li class="nav-item"><a class="nav-link" href="menu.php">Menu</a></li>
+                        <li class="nav-item"><a class="nav-link" href="transaction.php">Transaction</a></li>
                         <li class="nav-item"><a class="nav-link" href="about.php">About Us</a></li>
                         <li class="nav-item"><a class="nav-link" href="contact.php">Contact</a></li>
                         
