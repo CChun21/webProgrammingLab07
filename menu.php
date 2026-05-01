@@ -93,13 +93,16 @@
                     <ul class="navbar-nav ms-auto">
                         <li class="nav-item"><a class="nav-link" href="index.php">Home</a></li>
                         <li class="nav-item"><a class="nav-link active" href="menu.php">Menu</a></li>
-                        <li class="nav-item"><a class="nav-link" href="transaction.php">Transaction</a></li>
                         <li class="nav-item"><a class="nav-link" href="about.php">About Us</a></li>
                         <li class="nav-item"><a class="nav-link" href="contact.php">Contact</a></li>
-                        
+
                         <?php if(!isLoggedIn()): ?>
                             <li class="nav-item"><a class="nav-link" href="login.php">Login</a></li>
                         <?php else: ?>
+                            <?php if(!isAdmin()): ?>
+                                <li class="nav-item"><a class="nav-link" href="transaction.php">Checkout</a></li>
+                            <?php endif; ?>
+                            
                             <li class="nav-item"><a class="nav-link" href="logout.php">Logout</a></li>
                         <?php endif; ?>
                     </ul>
@@ -151,16 +154,10 @@
                                                 <?php if (isset($_SESSION['role']) && $_SESSION['role'] === "customer"): ?>
                                                     <!-- Add one to cart -->
                                                     <form method="POST" action="transaction.php" class="d-inline mt-2">
-                                                        <input type="hidden" name="item_id"    value="<?php echo $item['id']; ?>">
+                                                        <input type="hidden" name="item_id"    value="<?php echo $item['menu_id']; ?>">
                                                         <input type="hidden" name="item_name"  value="<?php echo htmlspecialchars($item['name']); ?>">
                                                         <input type="hidden" name="item_price" value="<?php echo $item['price']; ?>">
-                                                        <button type="submit" name="add_to_cart" class="btn btn-success btn-sm">Add+</button>
-                                                    </form>
-
-                                                    <!-- Remove one from cart -->
-                                                    <form method="POST" action="transaction.php" class="d-inline mt-2">
-                                                        <input type="hidden" name="item_id" value="<?php echo $item['id']; ?>">
-                                                        <button type="submit" name="remove_one" class="btn btn-danger btn-sm">Remove−</button>
+                                                        <button type="submit" name="add_to_cart" class="btn btn-success btn-sm">Add to Cart</button>
                                                     </form>
                                                 <?php endif; ?>
                                             </div>

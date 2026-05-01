@@ -9,90 +9,73 @@
     include('/home/hah1049/PHP-Includes/php-vars.inc');
     $conn = mysqli_connect($db_server, $user, $password, $db_names);
 
-    // --- Cookie helpers ---
-    $cookieName = 'restaurant_cart';
-    $cart = [];
-
-    if (isset($_COOKIE[$cookieName])) {
-        $decoded = json_decode($_COOKIE[$cookieName], true);
-        if (is_array($decoded)) {
-            $cart = $decoded;
-        }
+    if (!isLoggedIn()) {
+        header("Location: login.php?error=not_logged_in");
+        exit();
     }
 
-    // Handle POST actions
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (!isset($_SESSION['cart'])) {
+        $_SESSION['cart'] = [];
+    }
 
-        // Add item to cart
+    $cart = &$_SESSION['cart'];
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (isset($_POST['add_to_cart'])) {
-            $item_id   = (int)$_POST['item_id'];
+            $item_id = (int)$_POST['item_id'];
             $item_name = $_POST['item_name'];
             $item_price = (float)$_POST['item_price'];
-
-            // Find existing entry or create new one
             $found = false;
             foreach ($cart as &$entry) {
-                if ($entry['id'] === $item_id) {
+                if ($entry['id'] == $item_id) {
                     $entry['qty']++;
                     $found = true;
                     break;
                 }
             }
-            unset($entry);
 
+            unset($entry);
             if (!$found) {
                 $cart[] = [
-                    'id'    => $item_id,
-                    'name'  => $item_name,
+                    'id' => $item_id,
+                    'name' => $item_name,
                     'price' => $item_price,
-                    'qty'   => 1,
+                    'qty' => 1,
                 ];
             }
 
-            setcookie($cookieName, json_encode($cart), time() + 60 * 60 * 24, '/');
             header('Location: transaction.php');
             exit();
         }
 
-        // Remove one quantity of an item
         if (isset($_POST['remove_one'])) {
             $item_id = (int)$_POST['item_id'];
             foreach ($cart as $key => &$entry) {
-                if ($entry['id'] === $item_id) {
+                if ($entry['id'] == $item_id) {
                     $entry['qty']--;
                     if ($entry['qty'] <= 0) {
-                        array_splice($cart, $key, 1);
+                        unset($cart[$key]);
                     }
                     break;
                 }
             }
-            unset($entry);
-            setcookie($cookieName, json_encode($cart), time() + 60 * 60 * 24, '/');
+            $_SESSION['cart'] = array_values($cart);
             header('Location: transaction.php');
             exit();
         }
-
-        // Remove entire item line
-        if (isset($_POST['remove_item'])) {
-            $item_id = (int)$_POST['item_id'];
-            $cart = array_values(array_filter($cart, fn($e) => $e['id'] !== $item_id));
-            setcookie($cookieName, json_encode($cart), time() + 60 * 60 * 24, '/');
-            header('Location: transaction.php');
-            exit();
-        }
-
-        // Clear entire cart
+    
         if (isset($_POST['clear_cart'])) {
-            $cart = [];
-            setcookie($cookieName, json_encode($cart), time() - 3600, '/');
+            $_SESSION['cart'] = [];
             header('Location: transaction.php');
             exit();
         }
     }
 
-    // --- Totals ---
     $TAX_RATE  = 0.085;
-    $subtotal  = array_sum(array_map(fn($e) => $e['price'] * $e['qty'], $cart));
+    $subtotal = array_sum(array_map(function($e) {
+        return $e['price'] * $e['qty'];
+    }, $cart));
+    
     $tax       = $subtotal * $TAX_RATE;
     $total     = $subtotal + $tax;
 ?>
@@ -115,14 +98,14 @@
             }
             .transaction-table td {
                 vertical-align: middle;
-                color: #f0f0f0;
+                color: #000000;
                 border-color: rgba(255,255,255,0.1);
             }
             .transaction-table tbody tr:hover {
                 background: rgba(255,255,255,0.05);
             }
             .totals-card {
-                background: rgba(0,0,0,0.55);
+                background: rgb(0,0,0);
                 border: 1px solid rgba(255,193,7,0.35);
                 border-radius: 10px;
                 padding: 24px 28px;
@@ -175,15 +158,10 @@
                     <ul class="navbar-nav ms-auto">
                         <li class="nav-item"><a class="nav-link" href="index.php">Home</a></li>
                         <li class="nav-item"><a class="nav-link" href="menu.php">Menu</a></li>
-                        <li class="nav-item"><a class="nav-link active" href="transaction.php">Transaction</a></li>
                         <li class="nav-item"><a class="nav-link" href="about.php">About Us</a></li>
                         <li class="nav-item"><a class="nav-link" href="contact.php">Contact</a></li>
-
-                        <?php if(!isLoggedIn()): ?>
-                            <li class="nav-item"><a class="nav-link" href="login.php">Login</a></li>
-                        <?php else: ?>
-                            <li class="nav-item"><a class="nav-link" href="logout.php">Logout</a></li>
-                        <?php endif; ?>
+                        <li class="nav-item"><a class="nav-link active" href="transaction.php">Checkout</a></li>
+                        <li class="nav-item"><a class="nav-link" href="logout.php">Logout</a></li>
                     </ul>
                 </div>
             </div>
@@ -199,7 +177,7 @@
                         <!-- Empty state -->
                         <div class="text-center py-5">
                             <div class="empty-cart-icon">🛒</div>
-                            <p class="mt-3 text-muted">Your transaction is empty.</p>
+                            <p class="mt-3">Your cart is empty.</p>
                             <a href="menu.php" class="btn btn-warning mt-2">Browse the Menu</a>
                         </div>
 
