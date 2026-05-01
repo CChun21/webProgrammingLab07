@@ -38,15 +38,9 @@
                     <ul class="navbar-nav ms-auto">
                         <li class="nav-item"><a class="nav-link" href="index.php">Home</a></li>
                         <li class="nav-item"><a class="nav-link" href="menu.php">Menu</a></li>
-                        <li class="nav-item"><a class="nav-link" href="transaction.php">Transaction</a></li>
                         <li class="nav-item"><a class="nav-link" href="about.php">About Us</a></li>
                         <li class="nav-item"><a class="nav-link" href="contact.php">Contact</a></li>
-                        
-                        <?php if(!isLoggedIn()): ?>
-                            <li class="nav-item"><a class="nav-link" href="login.php">Login</a></li>
-                        <?php else: ?>
-                            <li class="nav-item"><a class="nav-link" href="logout.php">Logout</a></li>
-                        <?php endif; ?>
+                        <li class="nav-item"><a class="nav-link" href="login.php">Login</a></li>
                     </ul>
                 </div>
             </div>
@@ -60,7 +54,7 @@
 
                     <?php if (isset($_GET['error']) && $_GET['error'] == 1): ?>
                         <div class="alert alert-danger" role="alert">
-                            Incorrect username or password. Please try again.
+                            Incorrect email or password. Please try again.
                         </div>
                     <?php endif; ?>
 
@@ -73,7 +67,7 @@
                     <form action="authentication.php" method="post">
                         <div class="mb-3">
                             <label for="email" class="form-label">Email</label>
-                            <input type="text" id="email" name="email" class="form-control" placeholder="Enter your username" required>
+                            <input type="email" id="email" name="email" class="form-control" placeholder="Enter your email" required>
                         </div>
                         <div class="mb-3">
                             <label for="psw" class="form-label">Password</label>

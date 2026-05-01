@@ -29,6 +29,7 @@
     if (mysqli_num_rows($result) == 1) {
         $_SESSION["email"] = $email;
         $_SESSION["role"] = mysqli_fetch_assoc($result)["is_admin"] ? "admin" : "customer";
+        $_SESSION["user_id"] = mysqli_fetch_assoc($result)["user_ID"];
         header("Location: welcome.php");
     } else {
         header("Location: login.php?error=1");

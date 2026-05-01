@@ -35,10 +35,14 @@
                         <li class="nav-item"><a class="nav-link" href="transaction.php">Transaction</a></li>
                         <li class="nav-item"><a class="nav-link" href="about.php">About Us</a></li>
                         <li class="nav-item"><a class="nav-link active" href="contact.php">Contact</a></li>
-                        
+
                         <?php if(!isLoggedIn()): ?>
                             <li class="nav-item"><a class="nav-link" href="login.php">Login</a></li>
                         <?php else: ?>
+                            <?php if(!isAdmin()): ?>
+                                <li class="nav-item"><a class="nav-link" href="transaction.php">Checkout</a></li>
+                            <?php endif; ?>
+
                             <li class="nav-item"><a class="nav-link" href="logout.php">Logout</a></li>
                         <?php endif; ?>
                     </ul>
