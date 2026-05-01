@@ -20,6 +20,14 @@
 
     $cart = &$_SESSION['cart'];
 
+    $TAX_RATE  = 0.085;
+    $subtotal = array_sum(array_map(function($e) {
+        return $e['price'] * $e['qty'];
+    }, $cart));
+    
+    $tax = $subtotal * $TAX_RATE;
+    $total = $subtotal + $tax;
+
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (isset($_POST['add_to_cart'])) {
             $item_id = (int)$_POST['item_id'];
@@ -69,15 +77,41 @@
             header('Location: transaction.php');
             exit();
         }
-    }
 
-    $TAX_RATE  = 0.085;
-    $subtotal = array_sum(array_map(function($e) {
-        return $e['price'] * $e['qty'];
-    }, $cart));
-    
-    $tax       = $subtotal * $TAX_RATE;
-    $total     = $subtotal + $tax;
+        // Place Order logic
+        if (isset($_POST['place_order']) && !empty($cart)) {
+            $user_id = $_SESSION['user_id'];
+
+            // Insert the main transaction record first
+            $stmt = $conn->prepare("INSERT INTO transactions (user_id, total) VALUES (?, ?)");
+            $stmt->bind_param("id", $user_id, $total);
+            
+            if ($stmt->execute()) {
+                // Capture the auto-incremented trans_id created by the database
+                $new_trans_id = $conn->insert_id;
+
+                // Prepare the statement for the transaction_items table
+                $item_stmt = $conn->prepare("INSERT INTO transaction_items (trans_id, menu_id, quantity) VALUES (?, ?, ?)");
+
+                // Loop through each item in the session cart
+                foreach ($cart as $item) {
+                    $menu_id = $item['id'];
+                    $qty = $item['qty'];
+                    
+                    // Bind and execute for every item in the cart
+                    $item_stmt->bind_param("iii", $new_trans_id, $menu_id, $qty);
+                    $item_stmt->execute();
+                }
+
+                // Clean up and redirect
+                $_SESSION['cart'] = [];
+                header("Location: transaction.php?status=success");
+                exit();
+            } else {
+                echo "Error creating transaction: " . $conn->error;
+            }
+        }
+    }
 ?>
 
 <!DOCTYPE html>
@@ -258,6 +292,27 @@
                                     </button>
                                 </form>
                             </div>
+                        </div>
+                    <?php endif; ?>
+
+                    <!-- Place Order area-->
+                    <div class="mt-4">
+                        <?php if (!empty($cart)): ?>
+                            <form method="POST">
+                                <button type="submit" name="place_order" class="btn btn-warning w-100 fw-bold py-2">
+                                    Confirm & Place Order
+                                </button>
+                            </form>
+                        <?php else: ?>
+                            <button class="btn btn-secondary w-100 py-2" disabled>
+                                Add items to your cart to place an order
+                            </button>
+                        <?php endif; ?>
+                    </div>
+
+                    <?php if (isset($_GET['status']) && $_GET['status'] === 'success'): ?>
+                        <div class="alert alert-success mt-3 text-center">
+                            Order placed successfully!
                         </div>
                     <?php endif; ?>
                 </div>
