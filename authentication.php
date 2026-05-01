@@ -27,9 +27,10 @@
 
     // If the number of rows in the result is equal to 1, then the user is authenticated and we can start a session for them.
     if (mysqli_num_rows($result) == 1) {
+        $user = mysqli_fetch_assoc($result);
         $_SESSION["email"] = $email;
-        $_SESSION["role"] = mysqli_fetch_assoc($result)["is_admin"] ? "admin" : "customer";
-        $_SESSION["user_id"] = mysqli_fetch_assoc($result)["user_ID"];
+        $_SESSION["role"] = $user["is_admin"] ? "admin" : "customer";
+        $_SESSION["user_id"] = $user["user_ID"];
         header("Location: welcome.php");
     } else {
         header("Location: login.php?error=1");
