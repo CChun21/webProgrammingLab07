@@ -4,6 +4,21 @@
 
     // User state helper file.
     include('userState.php');
+
+    // Check if the user is logged in.
+    if (!isLoggedIn()) {
+        header("Location: login.php");
+        exit();
+    }
+
+    if (!isAdmin()) {
+        header("Location: index.php");
+        exit();
+    }
+
+    // Link vars file and connect to DB.
+    include('/home/hah1049/PHP-Includes/php-vars.inc');
+    $conn = mysqli_connect($db_server, $user, $password, $db_names);
 ?>
 
 <!DOCTYPE html>
@@ -11,9 +26,9 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        
-        <title>John's Restaurant - Contact</title>
 
+        <title>John's Restaurant - Admin Page</title>
+        
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
         <link rel="stylesheet" href="style.css">
 
@@ -35,7 +50,7 @@
                         <li class="nav-item"><a class="nav-link" href="index.php">Home</a></li>
                         <li class="nav-item"><a class="nav-link" href="menu.php">Menu</a></li>
                         <li class="nav-item"><a class="nav-link" href="about.php">About Us</a></li>
-                        <li class="nav-item"><a class="nav-link active" href="contact.php">Contact</a></li>
+                        <li class="nav-item"><a class="nav-link" href="contact.php">Contact</a></li>
 
                         <?php if(!isLoggedIn()): ?>
                             <li class="nav-item"><a class="nav-link" href="login.php">Login</a></li>
@@ -44,7 +59,7 @@
                                 <li class="nav-item"><a class="nav-link" href="transaction.php">Checkout</a></li>
                                 <li class="nav-item"><a class="nav-link" href="accountPage.php">My Account</a></li>
                             <?php else: ?>
-                                <li class="nav-item"><a class="nav-link" href="admin.php">Admin Page</a></li>
+                                <li class="nav-item"><a class="nav-link active" href="admin.php">Admin Page</a></li>
                             <?php endif; ?>
                             
                             <li class="nav-item"><a class="nav-link" href="logout.php">Logout</a></li>
@@ -54,35 +69,9 @@
             </div>
         </nav>
 
-        <!-- Hero Section -->
         <section class="hero" style="background-image: url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=1600&q=80');">
             <div class="container overlay">
-                <h1 class="text-center">Contact Us</h1>
 
-                <h3 class="text-center mb-4">We’d Love to Hear From You</h3>
 
-                <p>Email us at:
-                <a href="mailto:info@johnrestaurant.com" class="text-warning">info@johnrestaurant.com</a>
-                </p>
-
-                <p>Phone: (555) 123-4567</p>
-
-                <form>
-                    <div class="mb-3">
-                        <label class="form-label">Name</label>
-                        <input type="text" class="form-control">
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">Message</label>
-                        <textarea class="form-control"></textarea>
-                    </div>
-
-                    <button class="btn btn-warning">Submit</button>
-                </form>
-
-                <a href="index.php" class="btn btn-light mt-3">Return Home</a>
             </div>
         </section>
-    </body>
-</html>

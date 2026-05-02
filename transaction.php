@@ -197,6 +197,7 @@
                         <li class="nav-item"><a class="nav-link" href="about.php">About Us</a></li>
                         <li class="nav-item"><a class="nav-link" href="contact.php">Contact</a></li>
                         <li class="nav-item"><a class="nav-link active" href="transaction.php">Checkout</a></li>
+                        <li class="nav-item"><a class="nav-link" href="accountPage.php">My Account</a></li>
                         <li class="nav-item"><a class="nav-link" href="logout.php">Logout</a></li>
                     </ul>
                 </div>
