@@ -20,7 +20,6 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     </head>
 
-    <body>
         <!-- Navbar -->
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <div class="container">
@@ -42,8 +41,11 @@
                         <?php else: ?>
                             <?php if(!isAdmin()): ?>
                                 <li class="nav-item"><a class="nav-link" href="transaction.php">Checkout</a></li>
+                                <li class="nav-item"><a class="nav-link" href="accountPage.php">My Account</a></li>
+                            <?php else: ?>
+                                <li class="nav-item"><a class="nav-link" href="admin.php">Admin Page</a></li>
                             <?php endif; ?>
-
+                            
                             <li class="nav-item"><a class="nav-link" href="logout.php">Logout</a></li>
                         <?php endif; ?>
                     </ul>
