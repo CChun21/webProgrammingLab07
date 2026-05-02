@@ -35,6 +35,30 @@
             }
         }
 
+        if (isset($_POST['update_item'])) {
+            $old_name = $_POST['original_name']; 
+            $type = strtolower($_POST['type']);
+            $name = strtolower($_POST['name']);
+            $description = strtolower($_POST['description']);
+            $price = $_POST['price'];
+            $allergens = $_POST['allergens'] ?? [];
+            
+            $ingredients_raw = explode(',', $_POST['ingredients']);
+            $ingredients_array = array_map('strtolower', array_map('trim', $ingredients_raw));
+            
+            $ingredients_json = json_encode($ingredients_array);
+            $allergens_json = json_encode($allergens);
+
+            // Ensure the parameter binding matches the 7 '?' placeholders
+            $stmt = $conn->prepare("UPDATE menu_items SET type=?, name=?, description=?, price=?, ingredients=?, allergens=? WHERE name=?");
+            $stmt->bind_param("sssisss", $type, $name, $description, $price, $ingredients_json, $allergens_json, $old_name);
+            
+            if($stmt->execute()) {
+                header("Location: menu.php?updated=1");
+                exit();
+            }
+        }
+
         // Deletion logic.
         if (isset($_POST['delete_item'])) {
             $name_to_delete = $_POST['item_name'];
@@ -79,6 +103,7 @@
         <link rel="stylesheet" href="style.css">
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="edits.js"></script>
     </head>
 
     <body>
@@ -173,16 +198,16 @@
 
                 <?php if(isAdmin()): ?>
                     <!-- 'Add Item' button trigger modal -->
-                    <button type="button" class="btn btn-warning mt-3" data-bs-toggle="modal" data-bs-target="#exampleModalCenter">
+                    <button type="button" class="btn btn-warning mt-3" data-bs-toggle="modal" data-bs-target="#additemModal">
                     Add Item
                     </button>
 
                     <!-- Modal -->
-                    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                    <div class="modal fade" id="additemModal" tabindex="-1" role="dialog" aria-labelledby="additemModalTitle" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title text-dark" id="exampleModalLongTitle">Add an Item</h5>
+                                    <h5 class="modal-title text-dark" id="addItemModalLongTitle">Add an Item</h5>
 
                                     <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
@@ -332,17 +357,108 @@
                         </div>
                     </div>
 
+                    <!-- 'Edit Item' button trigger modal -->
+                    <button type="button" class="btn btn-warning mt-3" data-bs-toggle="modal" data-bs-target="#editItemModal">
+                    Edit Item
+                    </button>
+
+                    <!-- Edit Item Modal -->
+                    <div class="modal fade" id="editItemModal" tabindex="-1" aria-labelledby="editItemModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header text-dark">
+                                    <h5 class="modal-title" id="editItemModalLabel">Edit Menu Item</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                
+                                <div class="modal-body text-dark">
+                                    <div id="edit-selection-ui">
+                                        <label class="form-label">Select the item you wish to modify:</label>
+                                        <select id="item-to-edit" class="form-select mb-3" onchange="showEditFields(this)">
+                                            <option value="" selected disabled>Choose an item...</option>
+                                            <?php 
+                                            foreach ($menu_data as $category => $items) {
+                                                foreach ($items as $item) {
+                                                    // Encode the item data into the option value for easy JS access
+                                                    $safe_data = htmlspecialchars(json_encode($item), ENT_QUOTES, 'UTF-8');
+                                                    echo "<option value='{$safe_data}'>" . ucwords(htmlspecialchars($item['name'])) . " (" . ucfirst($category) . ")</option>";
+                                                }
+                                            }
+                                            ?>
+                                        </select>
+                                    </div>
+
+                                    <form id="actual-edit-form" method="POST" style="display: none;">
+                                        <input type="hidden" name="original_name" id="edit-original-name">
+                                        
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                <label class="form-label">Category</label>
+                                                <select name="type" id="edit-type" class="form-select" required>
+                                                    <option value="entree">Entree</option>
+                                                    <option value="appetizer">Appetizer</option>
+                                                    <option value="side">Side</option>
+                                                    <option value="dessert">Dessert</option>
+                                                    <option value="drink">Drink</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label class="form-label">Item Name</label>
+                                                <input type="text" name="name" id="edit-name" class="form-control" required>
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label class="form-label">Description</label>
+                                            <textarea name="description" id="edit-description" class="form-control" rows="2" required></textarea>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label class="form-label">Price ($)</label>
+                                            <input type="number" name="price" id="edit-price" class="form-control" required>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label class="form-label">Ingredients (Separate with commas)</label>
+                                            <textarea name="ingredients" id="edit-ingredients" class="form-control" rows="2" required></textarea>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label class="form-label">Allergens</label>
+                                            <div class="d-flex flex-wrap gap-2">
+                                                <?php 
+                                                $all_allergens = ["milk", "eggs", "fish", "shellfish", "tree nuts", "peanuts", "wheat", "soybeans", "sesame"];
+                                                foreach($all_allergens as $a): ?>
+                                                    <div class="form-check me-3">
+                                                        <input class="form-check-input allergen-check" type="checkbox" name="allergens[]" value="<?php echo $a; ?>" id="edit-<?php echo $a; ?>">
+                                                        <label class="form-check-label" for="edit-<?php echo $a; ?>"><?php echo ucfirst($a); ?></label>
+                                                    </div>
+                                                <?php endforeach; ?>
+                                            </div>
+                                        </div>
+
+                                        <hr>
+                                        <div class="d-flex justify-content-between">
+                                            <button type="button" class="btn btn-secondary" onclick="resetEditModal()">Back to Selection</button>
+                                            <button type="submit" name="update_item" class="btn btn-success">Update Record</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- 'Remove Item' button trigger modal -->
-                    <button type="button" class="btn btn-warning mt-3" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                    <button type="button" class="btn btn-warning mt-3" data-bs-toggle="modal" data-bs-target="#removeItemModal">
                     Remove Item
                     </button>
 
                     <!-- Modal -->
-                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal fade" id="removeItemModal" tabindex="-1" aria-labelledby="removeItemModalLabel" aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header text-dark">
-                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                                    <h1 class="modal-title fs-5" id="removeItemModalLabel">Remove Item</h1>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
 
