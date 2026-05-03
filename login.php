@@ -86,5 +86,6 @@
                 </div>
             </div>
         </section>
+        <?php include("music_player.php"); ?>
     </body>
 </html>

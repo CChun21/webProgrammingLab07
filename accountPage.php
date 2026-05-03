@@ -69,17 +69,9 @@
                         <?php else: ?>
                             <?php if(!isAdmin()): ?>
                                 <li class="nav-item"><a class="nav-link" href="transaction.php">Checkout</a></li>
-<<<<<<< HEAD
-                                <li class="nav-item"><a class="nav-link" href="history.php">My Orders</a></li>
                                 <li class="nav-item"><a class="nav-link active" href="accountPage.php">My Account</a></li>
                             <?php else: ?>
                                 <li class="nav-item"><a class="nav-link" href="admin.php">Admin Page</a></li>
-                                <li class="nav-item"><a class="nav-link" href="history.php">All Orders</a></li>
-=======
-                                <li class="nav-item"><a class="nav-link active" href="accountPage.php">My Account</a></li>
-                            <?php else: ?>
-                                <li class="nav-item"><a class="nav-link" href="admin.php">Admin Page</a></li>
->>>>>>> 34fb071801fdcc4033be34e03b9460f28b4ae84c
                             <?php endif; ?>
                             
                             <li class="nav-item"><a class="nav-link" href="logout.php">Logout</a></li>
@@ -126,5 +118,6 @@
                 </div>
             </div>
         </section>
+        <?php include("music_player.php"); ?>
     </body>
 </html>

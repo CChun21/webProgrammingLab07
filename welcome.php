@@ -23,5 +23,6 @@
 
         <p>You have successfully logged in.</p>
         <p>Redirecting to home page...</p>
+        <?php include("music_player.php"); ?>
     </body>
 </html>
